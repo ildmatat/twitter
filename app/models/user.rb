@@ -1,5 +1,5 @@
 class User < ActiveRecord::Base
-  has_many :microposts
+  has_many :microposts, dependent: :destroy
   validates :name,  presence: true, length: { maximum: 50 }
   before_create :create_remember_token
   
@@ -14,7 +14,10 @@ def User.new_remember_token
   def User.encrypt(token)
     Digest::SHA1.hexdigest(token.to_s)
   end
-
+def feed
+    Micropost.where("user_id = ?", id)
+  end
+  
 end
 private
 
